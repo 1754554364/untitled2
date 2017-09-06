@@ -1,0 +1,303 @@
+{% load staticfiles %}
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>{{SITE_NAME}}</title>
+        <meta name="keywords" content="{{SITE_NAME}}" />
+        <meta name="description" content="{{ SITE_DESC }}" />
+        <link href='{% static 'css/base.css' %}' rel="stylesheet">
+        <link href='{% static 'css/index.css' %}' rel="stylesheet">
+        {% block custom_css %}{% endblock %}
+        <script type="text/javascript" src='{% static 'js/jquery.min.js' %}'></script>
+        <script type="text/javascript" src='{% static 'js/sliders.js' %}'></script>
+        <!--[if lt IE 9]>
+        <script src="js/modernizr.js"></script>
+        <![endif]-->
+        <sctipt type="text/javascript" src="{% static 'js/up/jquery.js' %}"></sctipt>
+        <sctipt type="text/javascript" src="{% static 'js/up/js.js' %}"></sctipt>
+        {% block custom_js %}{% endblock %}
+    </head>
+    <body>
+    <header>
+      <div class="logo">
+          <h1>{{SITE_NAME}}</h1>
+          <p>{{ SITE_DESC }}</p>
+      </div>
+
+      <nav id="topnav" class="f_r">
+        <ul>
+            {% for ccategory in category_list%}
+            <a href="base2.html" target="_blank">{{ ccategory.name }}</a>
+            {% endfor %}
+        </ul>
+        <script src="../static/js/nav.js"></script>
+      </nav>
+    </header>
+    <article>
+      <div class="l_box f_l">
+        {% block left_conten %}{% endblock %}
+      </div>
+      <div class="r_box f_r">
+        <div class="tit01">
+          <h3>关注我</h3>
+          <button>登录</button>
+          <button>注册</button>
+          <div class="gzwm">
+            <ul>
+              <li><a class="xlwb" href="{{ WEIBO_SINA }}" target="_blank">新浪微博</a></li>
+              <li><a class="txwb" href="{{ WEIBO_TENCEUT }}" target="_blank">腾讯微博</a></li>
+              <li><a class="rss" href="{{ PRO_RSS }}" target="_blank">RSS</a></li>
+              <li><a class="wx" href="{{ PRO_EMAIL }}">邮箱</a></li>
+            </ul>
+          </div>
+        </div>
+        <!--tit01 end-->
+        <div class="moreSelect" id="lp_right_select">
+          <script>
+    window.onload = function ()
+    {
+      var oLi = document.getElementById("tab").getElementsByTagName("li");
+      var oUl = document.getElementById("ms-main").getElementsByTagName("div");
+
+      for(var i = 0; i < oLi.length; i++)
+      {
+        oLi[i].index = i;
+        oLi[i].onmouseover = function ()
+        {
+          for(var n = 0; n < oLi.length; n++) oLi[n].className="";
+          this.className = "cur";
+          for(var n = 0; n < oUl.length; n++) oUl[n].style.display = "none";
+          oUl[this.index].style.display = "block"
+        }
+      }
+    }
+    </script>
+            <div class="ms-top">
+            <ul class="hd" id="tab">
+              <li><a href="/">浏览排行</a></li>
+              <li><a href="/">评论排行</a></li>
+              <li class="cur"><a href="/">争分夺秒</a></li>
+            </ul>
+          </div>
+              <div class="ms-main" id="ms-main">
+                <div class="bd bd-news" >
+                  <ul>
+                    <li><a href="/" target="_blank">嘎多索国地</a></li>
+                    <li><a href="/" target="_blank">方式发给撒旦</a></li>
+                    <li><a href="/" target="_blank">供电所覆盖第.</a></li>
+                  </ul>
+                </div>
+                <div  class="bd bd-news">
+                  <ul>
+                    {% for article in article_comment_list%}
+                    <li><a href="/" target="_blank">{{ article.title | slice:':15'}}</a></li>
+                    {% endfor %}
+                  </ul>
+                </div>
+                    <div style="display: block;"  class="bd bd-news">
+                      <canvas id="clock" width="300" height=300" style="background-color:#aeaeae;">你的浏览器不支持canvas</canvas>
+                      <script type="text/javascript">
+                            var canvas = document.getElementById("clock");
+                            var cxt = canvas.getContext("2d");
+
+                            function drawClock() {
+                                var now = new Date();
+                                var sec = now.getSeconds();
+                                var min = now.getMinutes();
+                                var hour = now.getHours();
+                                hour > 12 ? hour - 12 : hour;
+                                hour += (min / 60);
+
+                                //先清空画布
+                                cxt.clearRect(0, 0, canvas.width, canvas.height);
+
+
+                                //图片作为表盘背景
+                                var img = new Image();
+                                img.src ="{% static 'images/tw.jpg' %}" ;
+                                cxt.drawImage(img, 0, 0);
+                                //img.onload = function () {
+                                //    cxt.drawImage(img, 0, 0);
+                                //}
+
+                                //画表盘大圆 圆心：x=250 y=250
+                                cxt.strokeStyle = "#07ff50";
+                                cxt.lineWidth = 10;
+                                cxt.beginPath();
+                                cxt.arc(150, 150, 140, 0, 360);
+                                cxt.stroke();
+                                cxt.closePath();
+
+                                //时刻度
+                                for (var i = 0; i < 12; i++) {
+                                    cxt.save();//保存当前状态
+                                    cxt.lineWidth = 7;
+                                    cxt.strokeStyle = "#1822bc";
+
+                                    //设置原点
+                                    cxt.translate(150, 150);
+                                    //设置旋转角度
+                                    cxt.rotate(30 * i * Math.PI / 180);//弧度   角度*Math.PI/180
+                                    cxt.beginPath();
+                                    cxt.moveTo(0, -125);//-175
+                                    cxt.lineTo(0, -135);//-195
+                                    cxt.stroke();
+                                    cxt.closePath();
+                                    cxt.restore();//把原来状态恢复回来
+                                }
+
+                                //分刻度
+                                for (var i = 0; i < 60; i++) {
+                                    cxt.save();
+                                    cxt.lineWidth = 3;
+                                    cxt.strokeStyle = "#44ff11";
+                                    cxt.translate(150, 150);
+                                    cxt.rotate(i * 6 * Math.PI / 180);
+                                    cxt.beginPath();
+                                    cxt.moveTo(0, -125);//-185
+                                    cxt.lineTo(0, -135);//-159
+                                    cxt.stroke();
+                                    cxt.closePath();
+                                    cxt.restore();
+                                }
+
+
+
+                                //以下的时针、分针、秒针均要转动，所以在这里要设置其异次元空间的位置
+                                //根据当前的小时数、分钟数、秒数分别设置各个针的角度即可
+                                //-----------------------------时针-----------------------------
+                                cxt.save();
+                                cxt.lineWidth = 5;
+                                cxt.strokeStyle = "#23e6ff";
+                                cxt.translate(150, 150);
+                                cxt.rotate(hour * 30 * Math.PI / 180);//每小时旋转30度
+                                cxt.beginPath();
+                                cxt.moveTo(0, -85);
+                                cxt.lineTo(0, 10);
+                                cxt.stroke();
+                                cxt.closePath();
+                                cxt.restore();
+
+                                //-----------------------------分针-----------------------------
+                                cxt.save();
+                                cxt.lineWidth = 3;
+                                cxt.strokeStyle = "#1f3bff";
+                                cxt.translate(150, 150);
+                                cxt.rotate(min * 6 * Math.PI / 180);//每分钟旋转6度
+                                cxt.beginPath();
+                                cxt.moveTo(0, -105);
+                                cxt.lineTo(0, 10);
+                                cxt.stroke();
+                                cxt.closePath();
+                                cxt.restore();
+
+                                //-----------------------------秒针-----------------------------
+                                cxt.save();
+                                cxt.lineWidth = 1.5;
+                                cxt.strokeStyle = "#FF0000";
+                                cxt.translate(150, 150);
+                                cxt.rotate(sec * 6 * Math.PI / 180);//每秒旋转6度
+                                cxt.beginPath();
+                                cxt.moveTo(0, -118);
+                                cxt.lineTo(0, 10);
+                                cxt.stroke();
+                                cxt.closePath();
+
+
+                                //美化表盘，画中间的小圆
+                                cxt.beginPath();
+                                cxt.arc(0, 0, 5, 0, 360);
+                                cxt.fillStyle = "#FFFF00";
+                                cxt.fill();
+                                cxt.strokeStyle = "#FF0000";
+                                cxt.stroke();
+                                cxt.closePath();
+
+                                //秒针上的小圆
+                                cxt.beginPath();
+                                cxt.arc(0, -90, 4, 0, 360);
+                                cxt.fillStyle = "#FFFF00";
+                                cxt.fill();
+                                cxt.stroke();
+                                cxt.closePath();
+                                cxt.restore();
+                                //显示时间
+                                cxt.font = "5px 微软雅黑";
+        {#                            cxt.lineWidth = 2;#}
+                                cxt.fillStyle = "#feffcf";
+        {#                            hour=now.getHours();#}
+        {#                            var str = hour > 10 ? hour : ("0" + hour) + ":" + (min > 10 ? min : ("0" + min))#}
+        {#                            cxt.fillText(str, 125, 230);//210  380#}
+                                cxt.lineWidth = 1;
+                                cxt.fillText("1 9 9 7", 130, 230);//210  400
+                                //中国制造
+                                cxt.font = "12px 宋体";
+                                cxt.lineWidth = 1;
+                                cxt.fillText("尕 小 伙 制 造", 110, 250);//210  400
+                            }
+
+                            drawClock();
+                            setInterval(drawClock, 1000);
+                      </script>
+                    </div>
+                </div>
+              <!--ms-main end -->
+            </div>
+        <!--切换卡 moreSelect end -->
+            <div class="cloud">
+              <h3>标签云</h3>
+              <ul>
+                <li><a href="/">工会发的规划</a></li>
+                <li><a href="/">web开发</a></li>
+                <li><a href="/">前端设计</a></li>
+                <li><a href="/">Html</a></li>
+                <li><a href="/">CSS3</a></li>
+                <li><a href="/">好几个大家好</a></li>
+                <li><a href="/">百度</a></li>
+                <li><a href="/">Javasript</a></li>
+                <li><a href="/">web开发</a></li>
+                <li><a href="/">前端设计</a></li>
+                <li><a href="/">Html</a></li>
+                <li><a href="/">CSS3</a></li>
+                <li><a href="/">Html5+css3</a></li>
+                <li><a href="/">百度</a></li>
+              </ul>
+            </div>
+            <div class="tuwen">
+              <h3>文章归档</h3>
+              <ul>
+              {% for archive in archive_list %}
+                <li>
+                  <p>
+                    <span class="tutime font-size-18">
+                        <a href='{% url 'archive' %}?year={{ archive | slice:":4" }}&month={{ archive | slice:"5:7" }}'>{{ archive }}</a>
+                    </span>
+                  </p>
+                </li>
+              {% endfor %}
+              </ul>
+            </div>
+            <div class="links">
+              <h3>友情链接</h3>
+              <ul>
+                <li><a href="/">w好地方</a></li>
+                <li><a href="/">前端设计</a></li>
+                <li><a href="/">Html</a></li>
+                <li><a href="/">CSS3</a></li>
+                <li><a href="/">Html5+css3</a></li>
+                <li><a href="/">百度</a></li>
+              </ul>
+            </div>
+        </div>
+      <!--r_box end -->
+    </article>
+        <footer>
+          <p class="ft-copyright">{{SITE_NAME}} 蜀ICP备xxxxxxx号-1</p>
+          <div id="tbox">
+            <a id="togbook" href="/"></a>
+            <a id="gotop" href="javascript:void(0)"></a>
+          </div>
+        </footer>
+    </body>
+</html>
